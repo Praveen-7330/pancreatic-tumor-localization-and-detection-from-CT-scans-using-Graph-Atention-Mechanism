@@ -1,0 +1,22 @@
+# Environments
+.venv/
+env/
+venv/
+
+# Python Bytecode
+__pycache__/
+*.py[cod]
+
+# Large Datasets & Caches
+dataset/
+*.tar
+*.gz
+
+# IDE & Logs
+.vscode/
+.idea/
+*.log
+logs/
+
+# Weights
+checkpoints/*.pth

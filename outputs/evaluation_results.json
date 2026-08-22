@@ -1,0 +1,37 @@
+{
+  "num_cases": 2,
+  "mean_pancreas_dice": 0.041687971058781415,
+  "std_pancreas_dice": 0.0,
+  "mean_tumor_dice": 1.2886597772079927e-08,
+  "std_tumor_dice": 0.0,
+  "mean_tumor_hd95_mm": 0.0,
+  "mean_bbox_centroid_dist_mm": 0.0,
+  "cases": [
+    {
+      "case_index": 1,
+      "pancreas_dice": 0.041687971058781415,
+      "pancreas_iou": 0.02128770617425664,
+      "pancreas_hd95_mm": 60.09078548330018,
+      "tumor_dice": 1.2886597772079927e-08,
+      "tumor_iou": 1.2886597772079927e-08,
+      "tumor_precision": 1.0,
+      "tumor_recall": 1.2886597772079927e-08,
+      "tumor_hd95_mm": 999.0,
+      "bbox_centroid_dist_mm": 999.0,
+      "bbox_iou": 0.0
+    },
+    {
+      "case_index": 2,
+      "pancreas_dice": 0.041687971058781415,
+      "pancreas_iou": 0.02128770617425664,
+      "pancreas_hd95_mm": 63.876462801254114,
+      "tumor_dice": 1.2886597772079927e-08,
+      "tumor_iou": 1.2886597772079927e-08,
+      "tumor_precision": 1.0,
+      "tumor_recall": 1.2886597772079927e-08,
+      "tumor_hd95_mm": 999.0,
+      "bbox_centroid_dist_mm": 999.0,
+      "bbox_iou": 0.0
+    }
+  ]
+}

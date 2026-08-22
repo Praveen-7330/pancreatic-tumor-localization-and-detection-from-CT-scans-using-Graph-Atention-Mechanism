@@ -1,0 +1,56 @@
+data:
+  dataset_name: "Task07_Pancreas"
+  data_dir: "./dataset/Task07_Pancreas"
+  cache_dir: "./dataset/cache"
+  train_split: 0.70
+  val_split: 0.15
+  test_split: 0.15
+  random_seed: 42
+  num_workers: 4
+
+preprocessing:
+  roi_size: [96, 96, 96]
+  spacing: [1.0, 1.0, 1.0]
+  hu_min: -100.0
+  hu_max: 240.0
+  norm_mean: 0.0
+  norm_std: 1.0
+  num_samples_per_volume: 4
+
+model:
+  in_channels: 1
+  num_classes: 3
+  feature_channels: [32, 64, 128, 256]
+  bottleneck_dim: 256
+  graph:
+    node_grid_size: [6, 6, 6]
+    in_features: 256
+    hidden_features: 128
+    out_features: 256
+    num_heads: 4
+    num_layers: 2
+    dropout: 0.1
+    k_neighbors: 8
+
+training:
+  epochs: 100
+  batch_size: 2
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  amp: true
+  grad_clip: 1.0
+  early_stopping_patience: 15
+  checkpoint_dir: "./checkpoints"
+  log_dir: "./logs"
+
+loss:
+  dice_weight: 0.5
+  ce_weight: 0.5
+  focal_gamma: 2.0
+  class_weights: [0.1, 1.0, 3.0]
+
+inference:
+  sw_batch_size: 2
+  overlap: 0.5
+  mode: "gaussian"
+  min_tumor_volume_voxels: 50
