@@ -10,6 +10,8 @@ from data.synthetic_generator import save_synthetic_dataset
 from data.download_msd import download_and_extract_msd_pancreas
 from models.full_gat_unet import PancreasGATUNet
 from training.trainer import PancreasTrainer
+from utils.device_utils import get_device
+from utils.path_utils import resolve_path
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train PancreasGATUNet Model on MSD Task07 Pancreas CT Dataset")
@@ -39,7 +41,7 @@ def main():
     if args.lr is not None:
         config["training"]["learning_rate"] = args.lr
         
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = get_device()
     print(f"==================================================")
     print(f"  PancreasGATUNet Master's Mini Project Trainer")
     print(f"==================================================")
@@ -47,8 +49,8 @@ def main():
     
     # Dataset Handling
     if args.synthetic:
-        data_dir = "./dataset/Task07_Pancreas_Synthetic"
-        if not os.path.exists(data_dir) or len(os.listdir(data_dir)) == 0:
+        data_dir = resolve_path('dataset', 'Task07_Pancreas_Synthetic')
+        if not data_dir.exists() or len(list(data_dir.iterdir())) == 0:
             print("[*] Generating synthetic benchmark dataset...")
             save_synthetic_dataset(output_dir=data_dir, num_samples=6)
         config["data"]["data_dir"] = data_dir

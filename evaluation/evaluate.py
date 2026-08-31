@@ -45,7 +45,7 @@ def compute_3d_bbox_error(pred_bbox, gt_bbox):
         
     c_pred = np.array(pred_bbox["centroid"])
     c_gt = np.array(gt_bbox["centroid"])
-    centroid_dist = float(np.linalg_norm(c_pred - c_gt))
+    centroid_dist = float(np.linalg.norm(c_pred - c_gt))
     
     # 3D Bounding Box Intersection Over Union
     z_int = max(0, min(pred_bbox["z_max"], gt_bbox["z_max"]) - max(pred_bbox["z_min"], gt_bbox["z_min"]) + 1)

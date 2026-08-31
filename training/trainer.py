@@ -26,7 +26,8 @@ class PancreasTrainer:
             self.optimizer, T_max=epochs, eta_min=1e-6
         )
         
-        self.scaler = torch.cuda.amp.GradScaler(enabled=config["training"].get("amp", True) and device.type == "cuda")
+        _amp_enabled = config["training"].get("amp", True) and device.type == "cuda"
+        self.scaler = torch.amp.GradScaler(device.type, enabled=_amp_enabled)
         self.criterion = CompositePancreasLoss(
             num_classes=config["model"]["num_classes"],
             class_weights=config["loss"]["class_weights"],
@@ -53,7 +54,7 @@ class PancreasTrainer:
             labels = batch["label"].to(self.device)
             self.optimizer.zero_grad()
             
-            with torch.cuda.amp.autocast(enabled=use_amp):
+            with torch.amp.autocast(device_type=self.device.type, enabled=use_amp):
                 seg_logits, loc_heatmap, _ = self.model(images)
                 loss, loss_dict = self.criterion(seg_logits, loc_heatmap, labels)
                 
