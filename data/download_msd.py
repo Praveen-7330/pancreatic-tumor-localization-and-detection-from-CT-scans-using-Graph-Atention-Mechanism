@@ -12,7 +12,7 @@ class DownloadProgressBar(tqdm):
             self.total = tsize
         self.update(b * bsize - self.n)
 
-def download_and_extract_msd_pancreas(target_dir=resolve_path('dataset')):
+def download_and_extract_msd_pancreas(target_dir="./dataset"):
     target_path = Path(target_dir)
     target_path.mkdir(parents=True, exist_ok=True)
     tar_path = target_path / "Task07_Pancreas.tar"

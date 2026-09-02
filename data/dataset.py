@@ -33,3 +33,16 @@ def get_dataloaders(data_dicts, fold=0, n_splits=5, roi_size=(96, 96, 96), batch
     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=num_workers, collate_fn=list_data_collate, pin_memory=True)
     val_loader = DataLoader(val_ds, batch_size=1, shuffle=False, num_workers=num_workers, pin_memory=True)
     return train_loader, val_loader
+
+def get_val_only_loader(data_dicts, fold=0, n_splits=5, num_workers=0, random_state=42):
+    """Lightweight loader for evaluation — skips training set, no caching."""
+    kf = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+    splits = list(kf.split(data_dicts))
+    _, val_idx = splits[fold]
+    val_files = [data_dicts[i] for i in val_idx]
+    val_transforms = get_val_transforms()
+    # cache_rate=0 means no pre-loading — scans are read on-demand
+    val_ds = CacheDataset(data=val_files, transform=val_transforms, cache_rate=0.0, num_workers=num_workers)
+    val_loader = DataLoader(val_ds, batch_size=1, shuffle=False, num_workers=num_workers)
+    print(f"[INFO] Evaluation set: {len(val_files)} cases (fold {fold} of {n_splits})")
+    return val_loader
