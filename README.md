@@ -13,9 +13,9 @@ Pancreatic tumor detection from CT scans is challenging due to small tumor size,
 
 The architecture comprises:
 - **Preprocessing Pipeline:** HU Windowing [-100, 240], isotropic resampling, and foreground/background balanced patch extraction.
-- **3D CNN Encoder:** Dense multi-scale volumetric feature encoding with skip connections.
-- **Graph Construction & GATv2 Attention:** Models relational dependencies across anatomical regions to disambiguate subtle tumor boundaries.
-- **Feature Fusion & 3D Decoder:** Reconstructs high-resolution multi-class segmentation maps and extracts 3D tumor bounding-box localization coordinates.
+- **3D CNN Encoder (U-Net Contracting Path):** Multi-scale 3D CNN volumetric feature extraction with spatial skip connections.
+- **Graph Attention Bottleneck (GATv2):** Converts CNN bottleneck features into a spatial 3D graph to model long-range contextual dependencies and anatomical relations between pancreas and tumor regions.
+- **Feature Fusion & 3D U-Net Decoder (Expanding Path):** Projects GAT graph features back to 3D volumetric space, fuses them with CNN features, and uses 3D U-Net skip connections to generate dual outputs: multi-class segmentation maps (Background, Pancreas, Tumor) and 3D tumor bounding-box localization heatmaps.
 - **Evaluation Suite:** Calculates Accuracy, Precision, Recall, F1 Score, Dice Similarity Coefficient (DSC), 3D HD95 distance, and 3D Bounding Box error on the Medical Segmentation Decathlon (MSD) Task07 Pancreas dataset.
 
 ---
