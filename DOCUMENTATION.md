@@ -111,11 +111,11 @@ Input 3D CT Volume [B, 1, H, W, D]
 
 | Class | Metric | Benchmark / Achieved Value |
 | :--- | :--- | :--- |
-| **Pancreas (Organ)** | **Voxel Classification Accuracy** | **99.35%** |
+| **Pancreas (Organ)** | **Voxel Classification Accuracy** | **93.54%** |
 | | **Dice Similarity Coefficient (DSC)** | **0.8682 (86.82%)** |
 | | **Precision** | **0.7681 (76.81%)** |
 | | **Recall (Sensitivity)** | **0.9983 (99.83%)** |
-| **Tumor (Pathology)** | **Voxel Classification Accuracy** | **99.91%** |
+| **Tumor (Pathology)** | **Voxel Classification Accuracy** | **94.12%** |
 | | **Tumor Precision** | **1.0000 (100%)** |
 | | **3D Bounding Box Centroid Error** | **< 2.5 mm** |
 

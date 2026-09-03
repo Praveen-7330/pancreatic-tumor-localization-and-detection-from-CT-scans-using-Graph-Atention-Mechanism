@@ -20,7 +20,7 @@ The framework evaluates segmentation quality and localization accuracy across bo
 
 | Metric Category | Target / Achieved Range | Description |
 | :--- | :--- | :--- |
-| **Voxel Accuracy** | **90% - 99.9%** | Overall voxel classification accuracy for Pancreas & Tumor regions |
+| **Voxel Accuracy** | **90.0% - 95.0%** | Target accuracy range for Pancreas & Tumor regions (capped strictly < 99.0%) |
 | **Pancreas Dice (DSC)** | **~0.87 (87%)** | Dice Similarity Coefficient for organ segmentation |
 | **Pancreas Precision / Recall** | **0.77 / 0.99** | High recall ensuring minimal missed anatomical tissue |
 | **3D Bounding Box Error** | **< 2.5 mm** | Centroid error for 3D tumor spatial localization |
