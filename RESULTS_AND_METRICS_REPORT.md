@@ -80,15 +80,21 @@ Pancreatic tumors exhibit poorly defined CT attenuation values that overlap with
 
 ---
 
-## 4. Generated Artifacts & Visualizations
+## 4. Presentation Bar Charts & Visual Artifacts
 
-The codebase automatically generates publication-quality visualization charts upon evaluation in the `outputs/` folder:
+Publication-quality, high-resolution (300 DPI) bar charts designed for presentation slides are available in `outputs/presentation_graphs/`:
 
-1. **`outputs/graph1_mean_metrics.png`**: Grouped bar chart comparing Pancreas vs. Tumor metrics across Accuracy, Precision, Recall, F1, and Dice.
-2. **`outputs/graph2_per_case_dice_f1.png`**: Case-by-case stability curve for Dice and F1 metrics.
-3. **`outputs/graph3_boxplots.png`**: Box plot distribution showcasing low metric variance across evaluation scans.
-4. **`outputs/graph4_tumor_prec_rec_acc.png`**: Precision, Recall, and Accuracy balance curve for tumor localization.
-5. **`outputs/evaluation_results.json`**: Structured JSON report with exact case-by-case raw data for verification.
+1. **Pancreas vs. Tumor All Metrics Bar Chart:**  
+   ![Pancreas vs Tumor Metrics](file:///c:/Users/Staffingly5/Downloads/Antigravity/pancreatic-tumor-gat/outputs/presentation_graphs/presentation_bar_chart_metrics.png)  
+   *File path:* `outputs/presentation_graphs/presentation_bar_chart_metrics.png`
+
+2. **Baseline Architecture Comparison (Dice Score Bar Chart):**  
+   ![Baseline Comparison](file:///c:/Users/Staffingly5/Downloads/Antigravity/pancreatic-tumor-gat/outputs/presentation_graphs/presentation_bar_chart_comparison.png)  
+   *File path:* `outputs/presentation_graphs/presentation_bar_chart_comparison.png`
+
+3. **Distance Error & Boundary Error Comparison (HD95 & Centroid Bar Chart):**  
+   ![Distance Errors](file:///c:/Users/Staffingly5/Downloads/Antigravity/pancreatic-tumor-gat/outputs/presentation_graphs/presentation_bar_chart_distance_errors.png)  
+   *File path:* `outputs/presentation_graphs/presentation_bar_chart_distance_errors.png`
 
 ---
 
@@ -97,9 +103,9 @@ The codebase automatically generates publication-quality visualization charts up
 To reproduce the exact metrics and re-generate evaluation reports/graphs:
 
 ```bash
-# Execute evaluation suite on validation scans
-python evaluation/evaluate.py --output_dir outputs
+# Generate presentation bar charts
+python visualization/generate_presentation_bar_charts.py
 
-# Generate slice-by-slice 3D overlay visualizations
-python visualization/visualize_results.py
+# Execute full evaluation suite on validation scans
+python evaluation/evaluate.py --output_dir outputs
 ```
