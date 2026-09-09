@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PRESENTATION_STUDY_GUIDE</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            margin: 40px auto;
+            max-width: 900px;
+            padding: 0 20px;
+            color: #1a1a1a;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3 { color: #0f172a; }
+        h1 { border-bottom: 2px solid #0284c7; padding-bottom: 10px; }
+        h2 { border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; margin-top: 30px; }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            background: #ffffff;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th { background-color: #0284c7; color: #ffffff; }
+        tr:nth-child(even) { background-color: #f1f5f9; }
+        code, pre {
+            font-family: Consolas, Monaco, monospace;
+            background-color: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        pre { padding: 14px; overflow-x: auto; display: block; }
+        blockquote {
+            background: #e0f2fe;
+            border-left: 5px solid #0284c7;
+            margin: 20px 0;
+            padding: 14px 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Master's Final Presentation & Viva Prep Guide</h1>
+<br>
+<p><strong>Project Title:</strong> Pancreatic Tumor Localization and Detection from CT Scans Using Graph Attention Mechanisms  </p>
+<p><strong>Student Name:</strong> Kanaparthi Praveen (Roll Number: 25071DB205)  </p>
+<p><strong>Supervisor:</strong> Dr. M. Gangappa (Associate Professor)  </p>
+<p><strong>Department:</strong> Computer Science and Engineering (AIML, IoT and R&AI)  </p>
+<p><strong>Institution:</strong> VNR Vignana Jyothi Institute of Engineering and Technology (VNRVJIET)  </p>
+<p><strong>Degree:</strong> M.Tech (AIDS) — Year I, Semester II  </p>
+<br>
+<hr>
+<br>
+<h2>1. Project Overview & Elevator Pitch (30-Second Summary)</h2>
+<br>
+<blockquote>*"Pancreatic tumor detection from abdominal CT scans is one of the hardest medical imaging challenges because pancreatic tumors are small, have low soft-tissue contrast, irregular boundaries, and complex surrounding vascular anatomy. Standard 3D CNNs fail because local convolutions cannot model long-range anatomical context.*</blockquote>
+<p>></p>
+<blockquote>*In this project, I developed **PancreasGATUNet**—a novel deep learning framework combining a **3D CNN Encoder-Decoder** with a **GATv2 Graph Attention Network** in the bottleneck. This allows the network to model spatial relationships between anatomical regions, improving tumor segmentation Dice score to **78.40%** (up from 68.20% in baseline 3D U-Net) and reducing 3D bounding box centroid localization error to **14.2 mm**."*</blockquote>
+<br>
+<hr>
+<br>
+<h2>2. Key Slide-by-Slide Presentation Breakdown</h2>
+<br>
+<h3>Slide 1: Introduction & Problem Statement</h3>
+<ul><li>**Challenge 1 (Small Target Size):** Pancreatic tumors occupy $< 1\%$ of the total abdominal CT volumetric space.</li></ul>
+<ul><li>**Challenge 2 (Low Soft-Tissue Contrast):** CT attenuation values (Hounsfield Units) of tumor tissue overlap heavily with healthy pancreatic tissue.</li></ul>
+<ul><li>**Challenge 3 (Convolution Limitation):** Standard 3D CNN filters have a small local receptive field and miss long-range context between distant anatomical structures.</li></ul>
+<br>
+<h3>Slide 2: Objectives of the Work</h3>
+<p>1. <strong>Multi-Class Volumetric Segmentation:</strong> Simultaneously segment the <strong>Background (Class 0)</strong>, <strong>Pancreas Organ (Class 1)</strong>, and <strong>Pancreatic Tumor (Class 2)</strong>.</p>
+<p>2. <strong>Automated 3D Bounding-Box Localization:</strong> Extract precise 3D spatial coordinate boundaries $(X_{\min}, X_{\max}, Y_{\min}, Y_{\max}, Z_{\min}, Z_{\max})$ and centroid locations for targeted radiologist review.</p>
+<p>3. <strong>Graph Attention Integration:</strong> Incorporate GATv2 graph self-attention over spatial sub-volume nodes to disambiguate soft-tissue boundaries.</p>
+<br>
+<h3>Slide 3: Dataset & Medical Preprocessing</h3>
+<ul><li>**Dataset:** **Medical Segmentation Decathlon (MSD) Task07 Pancreas**</li></ul>
+<p>  - 281 3D abdominal CT scans with expert voxel-level ground truth annotations.</p>
+<ul><li>**Preprocessing Pipeline:**</li></ul>
+<p>  1. <strong>Hounsfield Unit (HU) Windowing:</strong> Clipped CT attenuation values to `[-100, 240] HU` to suppress uninformative bone/air voxels and highlight soft abdominal organs.</p>
+<p>  2. <strong>Isotropic Resampling:</strong> Resampled all scans to a uniform voxel spacing of $1.0 \times 1.0 \times 1.0 \text{ mm}^3$.</p>
+<p>  3. <strong>Z-Score Intensity Normalization:</strong> Normalized CT voxel intensities to zero mean and unit variance.</p>
+<p>  4. <strong>Foreground/Background Patch Sampling:</strong> Extracted balanced $96 \times 96 \times 96$ sub-volume patches containing at least $50\%$ organ/tumor voxels.</p>
+<br>
+<h3>Slide 4: Proposed Architecture — `PancreasGATUNet`</h3>
+<p>1. <strong>3D CNN Encoder:</strong> 4 resolution levels of 3D volumetric convolutions extracting multi-scale feature maps $(16 \rightarrow 32 \rightarrow 64 \rightarrow 128$ channels).</p>
+<p>2. <strong>3D Spatial Graph Construction:</strong></p>
+<p>   - Bottleneck features are divided into a 3D spatial grid of nodes ($4 \times 4 \times 4 = 64$ graph nodes).</p>
+<p>   - Constructed a $k$-Nearest Neighbors ($k=8$) spatial graph based on Euclidean node coordinates.</p>
+<p>3. <strong>GATv2 Multi-Head Graph Attention Module:</strong></p>
+<p>   - Applies multi-head self-attention ($\text{Heads} = 2, \text{Layers} = 1$) across anatomical nodes.</p>
+<p>   - Computes dynamic attention weight $\alpha_{ij}$ between node $i$ and node $j$:</p>
+<p>     $$\alpha_{ij} = \frac{\exp\left(\mathbf{a}^T \text{LeakyReLU}\left(\mathbf{W} [\mathbf{h}_i \,||\, \mathbf{h}_j]\right)\right)}{\sum_{k \in \mathcal{N}_i} \exp\left(\mathbf{a}^T \text{LeakyReLU}\left(\mathbf{W} [\mathbf{h}_i \,||\, \mathbf{h}_k]\right)\right)}$$</p>
+<p>4. <strong>Graph-to-Volume Feature Fusion:</strong> Projects updated graph embeddings back into 3D spatial feature tensors and merges them via skip connections.</p>
+<p>5. <strong>Dual-Head 3D Decoder:</strong></p>
+<p>   - <strong>Head A (Segmentation):</strong> Predicts 3D voxel probability maps for 3 classes.</p>
+<p>   - <strong>Head B (Localization):</strong> Predicts 3D heatmap centroid distributions and regresses bounding box coordinates.</p>
+<br>
+<h3>Slide 5: Composite Multi-Task Loss Function</h3>
+<p>To address extreme foreground/background class imbalance, the model is trained with a composite loss:</p>
+<p>$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Dice}} + \lambda_1 \mathcal{L}_{\text{Focal}} + \lambda_2 \mathcal{L}_{\text{BBox}}$$</p>
+<br>
+<ul><li>**Dice Loss ($\mathcal{L}_{\text{Dice}}$):** Maximizes volumetric spatial overlap.</li></ul>
+<ul><li>**Focal Loss ($\mathcal{L}_{\text{Focal}}$ with $\gamma=2.0$):** Suppresses easy background voxels and focuses gradient updates on difficult tumor boundary voxels.</li></ul>
+<ul><li>**Smooth L1 Loss ($\mathcal{L}_{\text{BBox}}$):** Penalizes 3D bounding box coordinate localization errors.</li></ul>
+<br>
+<h3>Slide 6: Quantitative Results & Metrics</h3>
+<ul><li>**Pancreas (Organ):**</li></ul>
+<p>  - Dice Score: <strong>86.82%</strong></p>
+<p>  - Precision: <strong>76.81%</strong> | Recall: <strong>99.83%</strong> | IoU: <strong>76.71%</strong> | Accuracy: <strong>94.77%</strong></p>
+<ul><li>**Pancreatic Tumor:**</li></ul>
+<p>  - Dice Score: <strong>78.40%</strong></p>
+<p>  - Precision: <strong>81.20%</strong> | Recall: <strong>76.10%</strong> | IoU: <strong>65.10%</strong> | Accuracy: <strong>94.80%</strong></p>
+<p>  - 95% Hausdorff Distance (HD95): <strong>12.40 mm</strong> (down from 22.8 mm in baseline)</p>
+<ul><li>**3D Bounding Box Localization:**</li></ul>
+<p>  - Centroid Distance Error: <strong>14.20 mm</strong></p>
+<p>  - Bounding Box IoU: <strong>0.7100</strong></p>
+<br>
+<h3>Slide 7: Baseline Comparison & Discussion</h3>
+<ul><li>**Standard 3D U-Net:** Tumor Dice = $68.20\%$, HD95 = $22.80 \text{ mm}$</li></ul>
+<ul><li>**3D Attention U-Net:** Tumor Dice = $72.90\%$, HD95 = $17.50 \text{ mm}$</li></ul>
+<ul><li>**Proposed PancreasGATUNet (Ours):** Tumor Dice = **78.40%**, HD95 = **12.40 mm**</li></ul>
+<br>
+<p>*Conclusion:* Graph attention provides a <strong>$+10.2\%$ improvement in Tumor Dice</strong> over conventional 3D U-Net by capturing contextual organ relationships.</p>
+<br>
+<hr>
+<br>
+<h2>3. Top Viva & Panel Q&A Preparation</h2>
+<br>
+<h3>Q1: Why did you use HU Windowing between -100 and +240?</h3>
+<p><strong>Answer:</strong> Raw CT scans have intensity values ranging from $-1000 \text{ HU}$ (air) to $+3000 \text{ HU}$ (dense bone). Soft tissue organs like the pancreas and tumors lie in the narrow range of $0 \text{ to } +150 \text{ HU}$. By clipping intensities to `[-100, +240] HU`, we remove uninformative background noise and amplify contrast around soft abdominal organs.</p>
+<br>
+<h3>Q2: Why GATv2 instead of standard GAT or Transformer Self-Attention?</h3>
+<p><strong>Answer:</strong> Standard GAT uses a static attention mechanism where the ranking of attention weights is independent of the query node. GATv2 fixes this by placing the non-linearity before the inner product, making attention strictly dynamic and query-dependent. Compared to 3D Transformers, GATv2 is far more computationally lightweight because it operates on sparse $k$-NN spatial graph nodes ($k=8$) rather than dense voxel pairs.</p>
+<br>
+<h3>Q3: How do you extract 3D Bounding Boxes from segmentation masks?</h3>
+<p><strong>Answer:</strong> Once the network outputs the 3D tumor probability map, we apply connected-component analysis and thresholding to find the contiguous positive voxel cluster. We calculate the minimum and maximum indices along each spatial dimension $(X_{\min}, X_{\max}, Y_{\min}, Y_{\max}, Z_{\min}, Z_{\max})$ to bound the tumor volume, and compute its 3D spatial centroid.</p>
+<br>
+<h3>Q4: Why is Dice Score for Tumor lower than Pancreas organ (78.4% vs 86.8%)?</h3>
+<p><strong>Answer:</strong> Pancreatic tumors are much smaller in volume than the organ itself, leading to higher sensitivity to boundary voxel misclassifications. Additionally, tumor tissue seamlessly infiltrates healthy organ tissue, creating vague, low-contrast boundary gradients.</p>
+<br>
+<h3>Q5: What is the 95th Percentile Hausdorff Distance (HD95)?</h3>
+<p><strong>Answer:</strong> HD95 measures the spatial distance between the boundary points of the predicted segmentation mask and the ground truth mask. The 95th percentile is used to eliminate extreme outlier noise points. A lower HD95 (12.4 mm in our method vs 22.8 mm in baseline) indicates tighter, clinically reliable boundary agreement.</p>
+<br>
+<hr>
+<br>
+<h2>4. Key Project Files Checklist for Demo</h2>
+<p>1. `train.py`: Main model training script with AMP (Automatic Mixed Precision).</p>
+<p>2. `evaluation/evaluate.py`: Generates all quantitative metrics and JSON reports.</p>
+<p>3. `visualization/generate_presentation_bar_charts.py`: Generates 300-DPI presentation bar graphs.</p>
+<p>4. `visualization/visualize_results.py`: Renders multi-planar CT slice overlays and 3D BBox overlays.</p>
+<p>5. `models/full_gat_unet.py`: Core architecture implementing 3D UNet + GATv2.</p>
+</body>
+</html>
