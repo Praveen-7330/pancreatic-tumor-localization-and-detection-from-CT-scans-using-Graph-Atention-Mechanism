@@ -24,4 +24,6 @@ checkpoints/*.pth
 # Research Paper (Local Only)
 RESEARCH_PAPER*
 generate_research_paper.py
+outputs/paper_images/
+
 
